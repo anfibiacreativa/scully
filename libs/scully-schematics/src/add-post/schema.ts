@@ -7,6 +7,10 @@ export interface Schema {
    */
   name: string;
   /**
+   * add the title for the post
+   */
+  title: string;
+  /**
    * define the target directory for the new post file
    */
   target?: string;
