@@ -22,14 +22,12 @@
     "statusBar.foreground": "#e7e7e7",
     "panel.border": "#1b2c8f",
     "sideBar.border": "#1b2c8f",
-    "editorGroup.border": "#1b2c8f",
-    "statusBar.border": "#131f64",
-    "titleBar.border": "#131f64"
+    "editorGroup.border": "#1b2c8f"
   },
   "files.exclude": {
-    "**/scully/bin/**/*": true
+    "**/dist/**/*": false
   },
   "files.watcherExclude": {
-    "**/scully/bin/**": true
+    "**/dist/**": true
   }
 }

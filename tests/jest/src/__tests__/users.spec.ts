@@ -1,13 +1,9 @@
-import {readFileSync} from 'fs';
-import {join} from 'path';
-import {replaceIndexNG} from '../test-config.helper';
+import { readPage, replaceIndexNG } from '../test-config.helper';
+import { expect } from '@jest/globals';
 
 describe('JsonPlugin: test user List', () => {
   it('Check clean blog index by scully', () => {
-    const index: string = readFileSync(
-      join(__dirname, '../../../../dist/static/user/index.html'),
-      'UTF8'
-    ).toString();
+    const index: string = readPage('/user');
     const cleanIndex = replaceIndexNG(index);
     expect(cleanIndex).toMatchSnapshot();
   });

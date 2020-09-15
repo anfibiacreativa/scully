@@ -1,11 +1,11 @@
 /// <reference types="Cypress" />
 
-context('check first integration test', () => {
+context('combined integration tests', () => {
   it('check if a users exist', () => {
     cy.visit('/home');
     cy.get('ul>li>a')
       .contains('/user')
-      .should(element => {
+      .should((element) => {
         assert.isTrue(element.html() === '/user');
       });
   });
@@ -17,54 +17,59 @@ context('check first integration test', () => {
 
   it('Check is transferState exist in html', () => {
     cy.visit('/user');
-    cy.window()
-      .its('scully-transfer-state')
-      .should('have', 'users');
+    cy.window().its('scully-transfer-state').should('have', 'users');
   });
 
   it('Check if users dont call httprequest', () => {
     cy.server();
     cy.route('http://localhost:8200/users', {
-      onRequest: req => {
+      onRequest: (req) => {
         cy.log('Call http done');
         expect(true).to.equal(false);
       },
     });
     cy.visit('/user');
-    cy.wait(3000);
+    cy.wait(1500);
   });
 
   it('Check the list of users after navigation', () => {
     cy.visit('/home');
     cy.get('ul>li>a')
-      .contains('/user')
+      .contains('/user', { timeout: 25 })
       .click()
+      .wait(25)
       .get('a')
-      .contains('Leanne Graham')
+      .contains('Leanne', { timeout: 25 })
       .click()
+      .wait(25)
       .get('p')
-      .contains('1');
+      .contains('1', { timeout: 25 });
   });
 
-  it('Check is transferState exist in html', () => {
+  it('Check of transferState exist in html', () => {
     cy.visit('/user/1');
-    cy.window()
-      .its('scully-transfer-state')
-      .should('have', 'posts');
+    cy.window().its('scully-transfer-state').should('have', 'posts');
   });
 
-  it('check link to have target_blank in blog page 2', () => {
-    cy.visit('/blog/___UNPUBLISHED___k5nhcflm_SJwD4Z0QDrIHg1PGHo2mrfLZE8sfUsPy/');
+  it('Check if hash is ignored', () => {
+    cy.visit('/user/1#someHash');
+    cy.window().its('scully-transfer-state').should('have', 'posts');
+  });
 
-    cy.get('a[target]').should('have.attr', 'target', '_blank');
+  it('Check if search param is ignored', () => {
+    cy.visit('/user/1?filter=none');
+    cy.window().its('scully-transfer-state').should('have', 'posts');
+  });
+
+  it('Check if search + hash  param is ignored', () => {
+    cy.visit('/user/1?blah=none#someHash');
+    cy.window().its('scully-transfer-state').should('have', 'posts');
   });
 
   it('Check that the slow user mock template appears then disappears', () => {
     cy.visit('/slow').reload();
 
     cy.get('app-slow>h1').contains('Scully Not Generated');
-    cy.wait(4100)
-      .get('app-slow>h1')
-      .contains('Scully Generated');
+    cy.wait(2100).get('app-slow>h1').contains('Scully Generated');
   });
 });
