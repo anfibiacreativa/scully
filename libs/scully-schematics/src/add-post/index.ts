@@ -9,7 +9,7 @@ export default function(options: Schema): Rule {
     const name = options.name;
     const title = options.title || name;
     const extension = options.extension || 'md';
-    const nameDasherized = options.name ? strings.dasherize(options.name) : 'blog-X';
+    const nameDasherized = name ? strings.dasherize(name) : 'blog-X';
     const targetDasherized = options.target ? strings.dasherize(options.target) : 'blog';
 
     if (!/^[\w]+$/.test(extension)) {
