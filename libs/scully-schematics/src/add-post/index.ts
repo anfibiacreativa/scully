@@ -4,9 +4,10 @@ import { strings } from '@angular-devkit/core';
 import { Schema } from './schema';
 import { yamlToJson, jsonToJaml, removeWrongCharacters } from '../utils/utils';
 
-export default function (options: Schema): Rule {
+export default function(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
     const name = options.name;
+    const title = options.title || name;
     const extension = options.extension || 'md';
     const nameDasherized = options.name ? strings.dasherize(options.name) : 'blog-X';
     const targetDasherized = options.target ? strings.dasherize(options.target) : 'blog';
@@ -19,8 +20,8 @@ export default function (options: Schema): Rule {
 
     let metaData: any = {
       title: '',
-      description: 'blog description',
-      published: false,
+      description: 'description',
+      published: false
     };
 
     if (options.metaDataFile) {
@@ -32,13 +33,13 @@ export default function (options: Schema): Rule {
     }
 
     // set title from option and override if alreay in metaDataFile template
-    metaData.title = name;
+    metaData.title = title;
 
     if (!host.exists(filename)) {
       const content = `---
 ${jsonToJaml(metaData)}---
 
-# ${name}
+# ${title}
 `;
       host.create(filename, content);
       context.logger.info(`✅️ Blog ${filename} file created`);
